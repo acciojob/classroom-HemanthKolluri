@@ -1,48 +1,26 @@
 package com.driver;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class StudentService {
-
-    private StudentRepository studentRepository= new StudentRepository();
-
-    public void addStudent(Student student) {
-        studentRepository.add(student);
+    StudentRepository studentRepository=new StudentRepository();
+    public void addStudent(Student student){
+        studentRepository.addStudent(student);
     }
-
 
     public void addTeacher(Teacher teacher) {
-        studentRepository.add(teacher);
+        studentRepository.addTeacher(teacher);
     }
 
-    public void addStudentTeacherPair(String student, String teacher) throws StudentNameInvalidException, RuntimeException{
-        Optional<Student> studentOpt = studentRepository.getStudent(student);
-        Optional<Teacher> teacherOpt = studentRepository.getTeacher(teacher);
-        if(studentOpt.isEmpty()) {
-            throw new StudentNameInvalidException(student);
-        }
-        if(teacherOpt.isEmpty()) {
-            try {
-                throw new TeacherInvalidException();
-            } catch (TeacherInvalidException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        Teacher teacherObj = teacherOpt.get();
-        teacherObj.setNumberOfStudents(teacherObj.getNumberOfStudents()+1);
-        studentRepository.add(teacherObj);
-
-        studentRepository.add(student, teacher);
+    public void addStudentTeacherPair(String student, String teacher) {
+        studentRepository.addStudentTeacherPair(student,teacher);
     }
 
-    public Student getStudent(String name) throws StudentNameInvalidException {
-        Optional<Student> studentOpt = studentRepository.getStudent(name);
-        if(studentOpt.isPresent()) {
-            return studentOpt.get();
-        }
-        throw new StudentNameInvalidException(name);
+    public Student getStudentByName(String name) {
+        return studentRepository.getStudentByName(name);
     }
 
     public Teacher getTeacherByName(String name) {
@@ -50,26 +28,18 @@ public class StudentService {
     }
 
     public List<String> getStudentsByTeacherName(String teacher) {
-        return studentRepository.getStudentsByTeacher(teacher);
+        return studentRepository.getStudentsByTeacherName(teacher);
     }
 
     public List<String> getAllStudents() {
         return studentRepository.getAllStudents();
     }
 
-    public void deleteTeacher(String teacher) {
-        List<String> students = getStudentsByTeacherName(teacher);
-        studentRepository.deleteTeacher(teacher);
-        for(String stud: students) {
-            studentRepository.deleteStudent(stud);
-        }
+    public void deleteTeacherByName(String teacher) {
+        studentRepository.deleteTeacherByName(teacher);
     }
 
-
     public void deleteAllTeachers() {
-        List<String> teachers = studentRepository.getAllTeachers();
-        for(String teacher: teachers) {
-            deleteTeacher(teacher);
-        }
+        studentRepository.deleteAllTeachers();
     }
 }
