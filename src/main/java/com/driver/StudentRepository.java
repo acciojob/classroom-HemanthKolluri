@@ -1,5 +1,6 @@
 package com.driver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,8 +27,23 @@ public class StudentRepository {
         teacherMap.put(teacher.getName(), teacher);
     }
 
-    public void saveStudentTeacherPair(String student, String teacher) {
+    public void saveStudentTeacherPair(String studentName, String teacherName) {
         // Implement logic to save student-teacher pair
+        if (studentMap.containsKey(studentName) && teacherMap.containsKey(teacherName)) {
+            List<String> students = teacherStudentMapping.getOrDefault(teacherName, new ArrayList<>());
+            students.add(studentName);
+            teacherStudentMapping.put(teacherName, students);
+        } else {
+            if (!studentMap.containsKey(studentName)) {
+                // Handle the case where the student doesn't exist
+                System.out.println("Error: Student '" + studentName + "' does not exist.");
+            }
+            if (!teacherMap.containsKey(teacherName)) {
+                // Handle the case where the teacher doesn't exist
+                System.out.println("Error: Teacher '" + teacherName + "' does not exist.");
+            }
+        }
+
     }
 
     public Student findStudent(String student) {

@@ -42,29 +42,45 @@ public class StudentController {
     public ResponseEntity<Student> getStudentByName(@PathVariable String name){
         Student student = null; // Assign student by calling service layer method
         student = studentService.findStudent(name);
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
+        if (student != null) {
+            return new ResponseEntity<>(student, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping("/get-teacher-by-name/{name}")
     public ResponseEntity<Teacher> getTeacherByName(@PathVariable String name){
         Teacher teacher = null; // Assign student by calling service layer method
         teacher = studentService.findTeacher(name);
-
-        return new ResponseEntity<>(teacher, HttpStatus.CREATED);
+        if (teacher != null) {
+            return new ResponseEntity<>(teacher, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/get-students-by-teacher-name/{teacher}")
     public ResponseEntity<List<String>> getStudentsByTeacherName(@PathVariable String teacher){
         List<String> students = null; // Assign list of student by calling service layer method
         students = studentService.findStudentsFromTeacher(teacher);
-        return new ResponseEntity<>(students, HttpStatus.CREATED);
+        if (students != null && !students.isEmpty()) {
+            return new ResponseEntity<>(students, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/get-all-students")
     public ResponseEntity<List<String>> getAllStudents(){
         List<String> students = null; // Assign list of student by calling service layer method
         students = studentService.findAllStudents();
-        return new ResponseEntity<>(students, HttpStatus.CREATED);
+        if (students != null && !students.isEmpty()) {
+            return new ResponseEntity<>(students, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/delete-teacher-by-name")
